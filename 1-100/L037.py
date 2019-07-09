@@ -49,6 +49,7 @@ class Solution:
             self.col_mem.append(set())
             self.group_mem.append(set())
         
+        ### 向men中录入原始信息
         for i in range(size):
             for j in range(size):
                 bij = board[i][j]
@@ -56,7 +57,8 @@ class Solution:
                     self.row_mem[i].add(bij)
                     self.col_mem[j].add(bij)
                     self.group_mem[self.groupNum(i, j)].add(bij)
-                    
+        
+        ### 统计每个grid的可能性            
         num_total = set(list('123456789'))
         self.psb = {}
         for i in range(size):
@@ -66,7 +68,8 @@ class Solution:
                 if bij == '.':
                     psb_ij = num_total - self.row_mem[i] - self.col_mem[j] - self.group_mem[gp_num]
                     self.psb[(i, j, gp_num)] = psb_ij
-                    
+        
+        ### 从0开始探索           
         self.explore(0)
                     
                     
@@ -79,6 +82,7 @@ class Solution:
         i, j, g = key
         for p in psb:
             if self.checkValid(i, j, g,p):
+                ### 如果下一个key超出范围 直接返回true
                 if idx_key + 1 == len(list(self.psb.keys())):
                     return True
                 elif self.explore(idx_key + 1):
@@ -88,13 +92,13 @@ class Solution:
 
         return False
                 
-                
+        ### 无效则从mem中抹掉信息 不用抹掉board信息 因为最后一次肯定是正确的       
     def removeMem(self, i, j, g, p):
         self.row_mem[i].remove(p)
         self.col_mem[j].remove(p)
         self.group_mem[g].remove(p)
             
-            
+        ### 检查在grid中填入p是否有效，有效则修改mem和board    
     def checkValid(self, i, j, g, p):
         if p in self.row_mem[i]:
             return False
