@@ -44,7 +44,8 @@ class Solution:
         ### target : int
         ### return : List[List[int]]
         
-        print(cand, target)
+        cand.sort()
+        
         if len(cand) == 0:
             return []
         
@@ -52,31 +53,61 @@ class Solution:
             return []
         
         res = []
-        for i in range(len(cand)):
-            if cand[i] <= target:
-                times = 0
+        i = 0
+        if cand[i] <= target:
+            times = 0
+            ct = cand[i] * times
+            while ct <= target:
+                res_t = [cand[i]] * times
+                if ct == target:
+                    res.append(res_t)
+                else:
+                    res_next = self.combinationSumWithoutSort(cand[i + 1:], target - ct)
+                    if len(res_next) != 0:
+                        for j in range(len(res_next)):
+                            res.append(res_t + res_next[j])
+                times += 1
                 ct = cand[i] * times
-                while ct <= target:
-                    res_t = [cand[i]] * times
-                    if ct == target:
-                        res.append(res_t)
-                    else:
-                        res_next = self.combinationSum(cand[i + 1:], target - ct)
-                        if len(res_next) != 0:
-                            for j in range(len(res_next)):
-                                res.append(res_t + res_next[j])
-                    times += 1
-                    ct = cand[i] * times
-            else:
-                break
+
         return res
+    
+    def combinationSumWithoutSort(self, cand, target):
+        ### candidates : List[int]
+        ### target : int
+        ### return : List[List[int]]
+        
+ 
+        
+        if len(cand) == 0:
+            return []
+        
+        if target < cand[0]:
+            return []
+        
+        res = []
+        i = 0
+        if cand[i] <= target:
+            times = 0
+            ct = cand[i] * times
+            while ct <= target:
+                res_t = [cand[i]] * times
+                if ct == target:
+                    res.append(res_t)
+                else:
+                    res_next = self.combinationSumWithoutSort(cand[i + 1:], target - ct)
+                    if len(res_next) != 0:
+                        for j in range(len(res_next)):
+                            res.append(res_t + res_next[j])
+                times += 1
+                ct = cand[i] * times
+        return res 
         
         
         
 cl = Solution()
 
-candidates = [2,3, 5]
-target = 8
+candidates = [8,7,4,3]
+target = 11
 
 res = cl.combinationSum(candidates, target)
 
