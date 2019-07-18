@@ -34,3 +34,10 @@ class Solution(object):
                 dp[right] = 0
             left -= 1
             right += 1
+            
+            
+
+s = 'abcd'
+
+
+a = s[::-1]
