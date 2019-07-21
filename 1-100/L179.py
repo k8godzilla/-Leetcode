@@ -27,83 +27,55 @@ Created on Sat Jul 20 17:11:18 2019
 '''
 
 
+# 本问题的关键在于 是否认识到 x > y <=> x + y > y + x具有传导性
+
+
 
 class Solution:
     def largestNumber(self, nums: list) -> str:
         # def largestNumber(self, nums: List[int]) -> str:
+        nums = list(map(str, nums))
+        numsSort = self.mergeSort(nums)
+        if numsSort[0] == '0':
+            return '0'
+        return ''.join(numsSort)
+    
+    def mergeSort(self, nums):
         if len(nums) == 1:
-            return str(nums[0])
-        
-        nums = [str(nums[i]) for i in range(len(nums))]
-        
-        self.groups = [[] for i in range(9)]
-        
-        for i in range(len(nums)):
-            idx = int(nums[i][0])
-            self.groups[idx - 1].append(nums[i])
-            
-        res = ''
-        for i in range(len(self.groups)):
-            if self.groups[i] != []:
-                res = self.groupCompete(self.groups[i], str(i + 1), res)
-        return res
-            
-        
-        
-    def groupCompete(self, nums, digitFill,a):
-        numsNew = [nums[i] + a for i in range(len(nums))]
-        lenMax = max([len(numsNew[i]) for i in range(len(numsNew))])
-        numsNew = [numsNew[i] + digitFill * (lenMax - len(numsNew[i])) for i in range(len(numsNew))]
-        d = {}
-        for i in range(len(numsNew)):
-            d[numsNew[i]] = i
-        numsNewSort = self.numberBattle(numsNew, 0)
-        res = ''
-        print(nums)
-        for i in range(len(numsNewSort)):
-            res += nums[d[numsNewSort[i]]]
-
-        return res + a
-        
-    def numberBattle(self, nums, idx):
-        if idx >= len(nums[0]):
             return nums
-        
-        numsSort = []
-        pool = [[] for i in range(10)]
-        for i in range(len(nums)):
-            idxPool = int(nums[i][idx])
-            pool[idxPool].append(nums[i])
-        
-        for i in range(9, -1, -1):
-            if len(pool[i]) == 1:
-                numsSort.append(pool[i][0])
-            elif len(pool[i]) > 1:
-                numNext = self.numberBattle(pool[i], idx + 1)
-                for j in range(len(numNext)):
-                    numsSort.append(numNext[j])
-        return numsSort
+        else:
+            iM = len(nums) // 2
+            num0, num1 = self.mergeSort(nums[:iM]), self.mergeSort(nums[iM:])
+
+            numMerge = []
+            i, j = 0, 0
+            while i < len(num0) or j < len(num1):
+               
+                if i >= len(num0):
+                    numMerge.extend(num1[j:])
+                    j = len(num1)
+                elif j >= len(num1):
+                    numMerge.extend(num0[i:])
+                    i = len(num0)
+                elif self.compare(num0[i], num1[j]):
+                    numMerge.append(num0[i])
+                    i += 1
+                else:
+                    numMerge.append(num1[j])
+                    j += 1
+            return numMerge
             
-
-
-class LargerNumKey(str):
-    def __lt__(x, y):
-        return x+y > y+x
         
-class Solution:
-    def largestNumber(self, nums):
-        largest_num = ''.join(sorted(map(str, nums), key=LargerNumKey))
-        return '0' if largest_num[0] == '0' else largest_num
+    def compare(self, n1, n2):
+        return n1 + n2 > n2 + n1
         
-cl = Solution()       
-     
+        
+        
 
-   
-nums = [121,12]
-res = cl.largestNumber(nums)           
-
-
+cl = Solution()
+nums = [3,30,34,5,9]
+res = cl.largestNumber(nums)
 
 
-
-
+nums = ['1', '2']
+a = cl.mergeSort(nums)
