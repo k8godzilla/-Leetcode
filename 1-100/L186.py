@@ -36,24 +36,30 @@ class Solution:
         
         idxSpace = [i for i in range(len(s)) if s[i] == ' ']
         
-        if len(idxSpace) == 0:
-            return s
+        if len(idxSpace) > 0:
+
         
-        idxSpace = [-1] + idxSpace + [len(s)]
-        i, j = 1, len(idxSpace) - 2
-        cacheI = self.strCache(s, idxSpace[i - 1] + 1, idxSpace[i])
-        cacheJ = self.strCache(s, idxSpace[j] + 1,idxSpace[j + 1])
-        while i <= j:
-            if idxSpace[i] < len(s) - idxSpace[j]:
-                s[len(s) - idxSpace[i]: len(s) - idxSpace[i] + len(cacheI)] = cacheI
-                i += 1
-                cacheI = self.strCache(s, idxSpace[i - 1] + 1, idxSpace[i])
-            else:
-                s[len(s) - idxSpace[j] - len(cacheJ)  -1:len(s) - idxSpace[j] - 1] = cacheJ
-                j -= 1
-                cacheJ = self.strCache(s, idxSpace[j] + 1,idxSpace[j + 1])
-        print(cacheI, cacheJ)
-        return s
+            idxSpace = [-1] + idxSpace + [len(s)]
+            i, j = 1, len(idxSpace) - 2
+            cacheI = self.strCache(s, idxSpace[i - 1] + 1, idxSpace[i])
+            cacheJ = self.strCache(s, idxSpace[j] + 1,idxSpace[j + 1])
+            while i <= j:
+                if idxSpace[i] < len(s) - idxSpace[j]:
+                    s[len(s) - idxSpace[i]: len(s) - idxSpace[i] + len(cacheI)] = cacheI
+                    i += 1
+                    cacheI = self.strCache(s, idxSpace[i - 1] + 1, idxSpace[i])
+                    if j < i:
+                        s[len(s) - idxSpace[j] - len(cacheJ)  -1:len(s) - idxSpace[j] - 1] = cacheJ
+                else:
+                    s[len(s) - idxSpace[j] - len(cacheJ)  -1:len(s) - idxSpace[j] - 1] = cacheJ
+                    j -= 1
+                    cacheJ = self.strCache(s, idxSpace[j] + 1,idxSpace[j + 1])
+                    if j < i:
+                        s[len(s) - idxSpace[i]: len(s) - idxSpace[i] + len(cacheI)] = cacheI
+            
+            for i in range(1, len(idxSpace) - 1):
+                s[len(s) - idxSpace[i] - 1] = ' '
+
     
     def strCache(self, s, iStart, iEnd):
         cache = []
