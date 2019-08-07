@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Tue Jul  2 09:41:29 2019
+Created on Wed Aug  7 11:37:42 2019
 
 @author: admin
 """
@@ -50,37 +50,13 @@ p = "c*a*b"
 s = "mississippi"
 p = "mis*is*p*."
 输出: false
+
+来源：力扣（LeetCode）
+链接：https://leetcode-cn.com/problems/regular-expression-matching
+著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
 '''
 
-
-class Solution(object):
-    def isMatch(self, text, pattern):
-        m, n = len(text), len(pattern)
-        dp = [[False] * (n + 1) for _ in range(m + 1)]
-        dp[0][0] = True
-        for i in range(1, n + 1):
-            if pattern[i - 1] == '*':
-                dp[0][i] = dp[0][i - 2]
-        
-        for j in range(1, n + 1):
-            for i in range(1, m + 1):
-                if pattern[j - 1] == '.' or pattern[j -1] == text[i - 1]:
-                    dp[i][j] = dp[i - 1][j - 1]
-                elif pattern[j - 1] == '*':
-                    if dp[i][j-2]:
-                        dp[i][j] = True
-                    elif pattern[j - 2] == '.' or pattern[j - 2] == text[i -1]:
-                        dp[i][j] = max(dp[i-1][j], dp[i][j -1], dp[i-1][j-1])
-        return dp[-1][-1]
-                        
-s = "mississippi"
-p = "mis*is*p*."
-cl = Solution()
-res = cl.isMatch(s, p)
-        
-        
-        
-
-        
-
+class Solution:
+    def isMatch(self, s: str, p: str) -> bool:
+        pass
 

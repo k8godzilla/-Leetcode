@@ -59,7 +59,88 @@ class Solution:
             if abs(node.val - target) < diff:
                 nodeC = node
                 diff = abs(node.val - target)
-            if node.val < 
+            if node.val < target:
+                node = node.right
+            elif node.val > target:
+                node = node.left
+            else:
+                node = None
+                
+        res = [nodeC.val]
+        nodeRight = self.nextGreater(nodeC, root)
+        nodeLeft = self.nextSmaller(nodeC, root)
+        while len(res) < k:
+            if nodeRight is None:
+                res.append(nodeLeft.val)
+                nodeLeft = self.nextSmaller(nodeLeft, root)
+            elif nodeLeft is None:
+                res.append(nodeRight.val)
+                nodeRight = self.nextGreater(nodeRight, root)
+            elif abs(nodeLeft.val - target) < abs(nodeRight.val - target):
+                res.append(nodeLeft.val)
+                nodeLeft = self.nextSmaller(nodeLeft, root)
+            else:
+                res.append(nodeRight.val)
+                nodeRight = self.nextGreater(nodeRight, root)
+                
+        return res
+
+       
+    def nextGreater(self, p: TreeNode, root: TreeNode):
+        if p is None:
+            return None
+        
+        if p.right is not None:
+            p = p.right
+            while p.left is not None:
+                p = p.left
+            return p
+        
+
+        node = root
+        res = None
+        while node != p:
+            if p.val < node.val:
+                res = node
+                node = node.left
+            else:
+                node = node.right
+        
+        return res  
+
+    def nextSmaller(self, p: TreeNode, root: TreeNode):
+        if p is None:
+            return None
+        
+        if p.left is not None:
+            p = p.left
+            while p.right is not None:
+                p = p.right
+            return p
+        
+        node = root
+        res = None
+        while node != p:
+            if p.val > node.val:
+                res = node
+                node = node.right
+            else:
+                node = node.left
+        
+        return res
+        
+        
+            
+        
+        
+        
+        
+        
+        
+        
+        
+                
+                
         
         
         
